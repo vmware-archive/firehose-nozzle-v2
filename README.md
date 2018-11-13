@@ -45,7 +45,9 @@ is *not* accessible to applications running on the platform (requring packaging 
 For local dev, it's possible to setup a ssh tunnel through OpsMan:
 ```
 
-ssh -i [path to private key] -L 9000:[IP of loggregator_trafficcontroller or control VM]:[8082 or 8086] ubuntu@opsman.example.com
+ssh -i [path to private key] \
+  -L 9000:[IP of loggregator_trafficcontroller or control VM]:[8082 or 8086] \
+  ubuntu@opsman.example.com
 ```
 
 ## With RLP Gateway
