@@ -50,9 +50,10 @@ ssh -i [path to private key] -L 9000:[IP of loggregator_trafficcontroller or con
 
 ## With RLP Gateway
 
-[RLP Gateway](https://github.com/cloudfoundry/loggregator-release/tree/develop/jobs/reverse_log_proxy_gateway)
-* Adds back the ability to deploy applications as a nozzle
-* Eliminates the need for mTLS
+The [RLP Gateway](https://github.com/cloudfoundry/loggregator-release/tree/develop/jobs/reverse_log_proxy_gateway) makes
+v2 nozzle development much easier by:
+* Addding back the ability to deploy applications as a nozzle
+* Eliminating the need for mTLS
 
 Coming in PCF version **???**
 
