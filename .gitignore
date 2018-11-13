@@ -1,0 +1,6 @@
+local_dev.sh
+
+vendor
+
+certs
+!certs/.gitkeep
