@@ -1,0 +1,7 @@
+[[constraint]]
+  name = "code.cloudfoundry.org/go-loggregator"
+  version = "6.0.0"
+
+[prune]
+  go-tests = true
+  unused-packages = true

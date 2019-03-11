@@ -63,8 +63,8 @@ func newTLSConfig(caPath, certPath, keyPath, cn string) (*tls.Config, error) {
 	}
 
 	tlsConfig := &tls.Config{
-		ServerName:         cn,
-		Certificates:       []tls.Certificate{cert},
+		ServerName:   cn,
+		Certificates: []tls.Certificate{cert},
 		//InsecureSkipVerify: true,
 	}
 
