@@ -22,10 +22,13 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"net/url"
 	"os"
 
 	"code.cloudfoundry.org/go-loggregator"
 	"code.cloudfoundry.org/go-loggregator/rpc/loggregator_v2"
+	"github.com/cloudfoundry-incubator/uaago"
 )
 
 var allSelectors = []*loggregator_v2.Selector{
@@ -84,6 +87,65 @@ func newTLSConfig(caPath, certPath, keyPath, cn string) (*tls.Config, error) {
 }
 
 func main() {
+	if true {
+		gatewayMain()
+	} else {
+		rlpMain()
+	}
+}
+
+func gatewayMain() {
+	uaaURI := "https://uaa.sys.cf.example.com"
+	uaaClient, err := uaago.NewClient(uaaURI)
+	if err != nil {
+		panic(err)
+	}
+	token, expiresIn, err := uaaClient.GetAuthTokenWithExpiresIn("v2-nozzle-test", "captor1263_Winding", true)
+	println(token)
+	println(expiresIn)
+	println(err)
+	if err != nil {
+		panic(err)
+	}
+
+	gatewayURI := "https://log-stream.sys.cf.example.com.com/v2/read?counter"
+	transport := http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
+	client := http.Client{Transport: &transport}
+	gatewayURL, err := url.Parse(gatewayURI)
+	if err != nil {
+		panic(err)
+	}
+
+	response, err := client.Do(&http.Request{
+		Header: map[string][]string{
+			"Authorization": {token},
+		},
+		URL: gatewayURL,
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	//todo: the following code is NOT a sane implementation, just committing WIP
+	//todo: handle buffers in a sane way
+	b := make([]byte, 1)
+	payload := ""
+	for {
+		_, err := response.Body.Read(b)
+		if err != nil {
+			panic(err)
+		}
+		if b[0] == []byte("\n")[0] {
+			println(payload)
+			payload = ""
+		} else {
+			payload += string(b[0])
+		}
+	}
+}
+
+func rlpMain() {
 	tlsConfig, err := newTLSConfig(
 		os.Getenv("CA_CERT_PATH"), os.Getenv("CERT_PATH"),
 		os.Getenv("KEY_PATH"), "reverselogproxy",

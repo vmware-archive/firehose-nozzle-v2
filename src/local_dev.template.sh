@@ -23,6 +23,7 @@ function cleanup() {
 echo "Starting tunnel"
 echo ""
 
+echo "Starting tunnel"
 ssh -N -f \
     -i $HOME/pcf.example.opsman_rsa \
     -L ${bind_host_host_port} \

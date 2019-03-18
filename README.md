@@ -14,6 +14,7 @@ Each is described below. Using the Gateway is the easier path to building a nozz
 The RLP Gateway adds:
 * The ability to deploy applications as a nozzle
 * Eliminating the need for mTLS
+* Does not require any Loggregator specific libraries to process data
 
 The gateway was released [in PCF version 2.4](https://docs.pivotal.io/pivotalcf/2-4/pcf-release-notes/runtime-rn.html#-loggregator-v2-api-is-readable-through-rlp-gateway)
 
@@ -70,8 +71,8 @@ the certificates are generated and put on disk.
 ## References
 
 * v1 -> v2 mapping: https://github.com/cloudfoundry/loggregator-api/blob/master/README.md#v2---v1-mapping
+* v2 reference example https://github.com/cloudfoundry-incubator/refnozzle
 * Envelope proto buff def https://github.com/cloudfoundry/loggregator-api/blob/master/v2/envelope.proto
-* Example: https://github.com/cloudfoundry-incubator/refnozzle/blob/master/cmd/nozzle/main.go
 * Example: https://github.com/cloudfoundry/go-loggregator/blob/master/examples/envelope_stream_connector/main.go
-* https://github.com/cloudfoundry/log-cache-cli
+* CLI plugin to stream v2 data https://github.com/cloudfoundry/log-cache-cli
 * https://github.com/cloudfoundry/cf-drain-cli
