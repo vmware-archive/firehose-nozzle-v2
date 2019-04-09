@@ -15,7 +15,7 @@ var _ = Describe("Receiver", func() {
 		handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			str := `data: {"content": "Something really interesting"}`
 			w.Write([]byte(str))
-			w.Write([]byte{10})
+			w.Write([]byte("\n "))
 			//bazaarAPIRequest = r
 		})
 		logStreamServer := httptest.NewServer(handler)
