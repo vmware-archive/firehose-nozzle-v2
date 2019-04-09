@@ -34,7 +34,7 @@ uaac client add my-v2-nozzle \
   --authorities logs.admin
 ```
 
-To manually get a token,
+To manually get a token:
 
 ```bash
 uaac token client get v2-nozzle-test -s <my-v2-nozzle client secret>
