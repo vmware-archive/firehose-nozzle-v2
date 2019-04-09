@@ -20,6 +20,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
+	"github.com/cf-platform-eng/firehose-nozzle-v2/src/nozzle"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -87,20 +88,27 @@ func newTLSConfig(caPath, certPath, keyPath, cn string) (*tls.Config, error) {
 }
 
 func main() {
+	c, err := nozzle.GetConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	//todo: Split into two different examples
 	if true {
-		gatewayMain()
+		gatewayMain(c)
 	} else {
 		rlpMain()
 	}
 }
 
-func gatewayMain() {
-	uaaURI := "https://uaa.sys.cf.example.com"
-	uaaClient, err := uaago.NewClient(uaaURI)
+func gatewayMain(c *nozzle.Config) {
+	uaaClient, err := uaago.NewClient(c.UaaURL)
 	if err != nil {
 		panic(err)
 	}
-	token, expiresIn, err := uaaClient.GetAuthTokenWithExpiresIn("v2-nozzle-test", "captor1263_Winding", true)
+
+	// This token will expire and may require a refresh workflow
+	token, expiresIn, err := uaaClient.GetAuthTokenWithExpiresIn(os.Getenv("UAA_USER"), os.Getenv("UAA_PASS") , true)
 	println(token)
 	println(expiresIn)
 	println(err)
@@ -108,7 +116,7 @@ func gatewayMain() {
 		panic(err)
 	}
 
-	gatewayURI := "https://log-stream.sys.cf.example.com.com/v2/read?counter"
+	gatewayURI := os.Getenv("LOG_STREAM_URL") + "/v2/read?counter"
 	transport := http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 	client := http.Client{Transport: &transport}
 	gatewayURL, err := url.Parse(gatewayURI)
@@ -151,7 +159,7 @@ func rlpMain() {
 		os.Getenv("KEY_PATH"), "reverselogproxy",
 	)
 	if err != nil {
-		log.Fatal("Could not create TLS config", err)
+		log.Fatal("Could not create TLS nozzle", err)
 	}
 
 	loggr := log.New(os.Stderr, "[", log.LstdFlags)
