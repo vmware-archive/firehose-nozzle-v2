@@ -23,13 +23,10 @@ import (
 	"github.com/cf-platform-eng/firehose-nozzle-v2/src/nozzle"
 	"io/ioutil"
 	"log"
-	"net/http"
-	"net/url"
 	"os"
 
 	"code.cloudfoundry.org/go-loggregator"
 	"code.cloudfoundry.org/go-loggregator/rpc/loggregator_v2"
-	"github.com/cloudfoundry-incubator/uaago"
 )
 
 var allSelectors = []*loggregator_v2.Selector{
@@ -93,64 +90,12 @@ func main() {
 		panic(err)
 	}
 
-	//todo: Split into two different examples
-	if true {
-		gatewayMain(c)
-	} else {
-		rlpMain()
-	}
-}
-
-func gatewayMain(c *nozzle.Config) {
-	uaaClient, err := uaago.NewClient(c.UaaURL)
+	uaaClient, err := nozzle.NewUAA(c.UAAURL, c.UAAUser, c.UAAPass, true)
 	if err != nil {
 		panic(err)
 	}
 
-	// This token will expire and may require a refresh workflow
-	token, expiresIn, err := uaaClient.GetAuthTokenWithExpiresIn(os.Getenv("UAA_USER"), os.Getenv("UAA_PASS") , true)
-	println(token)
-	println(expiresIn)
-	println(err)
-	if err != nil {
-		panic(err)
-	}
-
-	gatewayURI := os.Getenv("LOG_STREAM_URL") + "/v2/read?counter"
-	transport := http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
-	client := http.Client{Transport: &transport}
-	gatewayURL, err := url.Parse(gatewayURI)
-	if err != nil {
-		panic(err)
-	}
-
-	response, err := client.Do(&http.Request{
-		Header: map[string][]string{
-			"Authorization": {token},
-		},
-		URL: gatewayURL,
-	})
-
-	if err != nil {
-		panic(err)
-	}
-
-	//todo: the following code is NOT a sane implementation, just committing WIP
-	//todo: handle buffers in a sane way
-	b := make([]byte, 1)
-	payload := ""
-	for {
-		_, err := response.Body.Read(b)
-		if err != nil {
-			panic(err)
-		}
-		if b[0] == []byte("\n")[0] {
-			println(payload)
-			payload = ""
-		} else {
-			payload += string(b[0])
-		}
-	}
+	nozzle.GatewayMain(c, uaaClient)
 }
 
 func rlpMain() {

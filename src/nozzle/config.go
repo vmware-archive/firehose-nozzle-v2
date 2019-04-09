@@ -5,7 +5,10 @@ import (
 )
 
 type Config struct {
-	UaaURL string `envconfig:"UAA_URL" required:"true"`
+	UAAURL       string `envconfig:"UAA_URL" required:"true"`
+	UAAUser      string `envconfig:"UAA_USER" required:"true"`
+	UAAPass      string `envconfig:"UAA_PASS" required:"true"`
+	LogStreamUrl string `envconfig:"LOG_STREAM_URL" required:"true"`
 }
 
 func GetConfig() (*Config, error) {
