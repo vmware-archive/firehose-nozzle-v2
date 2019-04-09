@@ -18,6 +18,36 @@ The RLP Gateway adds:
 
 The gateway was released [in PCF version 2.4](https://docs.pivotal.io/pivotalcf/2-4/pcf-release-notes/runtime-rn.html#-loggregator-v2-api-is-readable-through-rlp-gateway)
 
+### Authentication & Testing
+To create a UAA user that can access the data, use
+the [UAA CLI](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
+
+Create the user:
+
+```bash
+uaac target https://uaa.sys.<pcf system domain> --skip-ssl-validation
+uaac token client get admin -s <admin client secret>
+uaac client add my-v2-nozzle \
+  --name my-v2-nozzle \
+  --secret <my-v2-nozzle client secret> \
+  --authorized_grant_types client_credentials,refresh_token \
+  --authorities logs.admin
+```
+
+To manually get a token,
+
+```bash
+uaac token client get v2-nozzle-test -s <my-v2-nozzle client secret>
+uaac context
+``` 
+
+The RLP Gateway data can be tested with just `curl`. To view the 
+data (newline delimited JSON payloads), copy the token and run:
+```bash
+export token=<my-v2-nozzle token from context>
+curl -k -H "Authorization: $token" 'https://log-stream.sys.<pcf system domain>/v2/read?counter'
+```
+
 ## Building a Nozzle Directly Connecting to RLP
 
 Communication is done directly to the RLP over HTTP/2.
