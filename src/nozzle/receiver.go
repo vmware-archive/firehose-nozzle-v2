@@ -1,15 +1,17 @@
 package nozzle
 
 import (
+	"bufio"
 	"crypto/tls"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
-func GatewayMain(c *Config, uaaClient UAA, shipper LogShipper) error {
+func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 	token, err := uaaClient.GetAuthToken()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	gatewayURI := c.LogStreamUrl + "/v2/read?counter"
@@ -26,27 +28,20 @@ func GatewayMain(c *Config, uaaClient UAA, shipper LogShipper) error {
 		},
 		URL: gatewayURL,
 	})
-
 	if err != nil {
 		return err
 	}
 
-	//todo: the following code is NOT a sane implementation, just committing WIP
-	//todo: handle buffers in a sane way
-	b := make([]byte, 1)
-	payload := ""
+	reader := bufio.NewReader(response.Body)
 	for {
-		_, err := response.Body.Read(b)
+		line, err := reader.ReadString('\n')
 		if err != nil {
 			return err
 		}
-		if b[0] == []byte("\n")[0] {
-			shipper.LogShip(payload)
-			payload = ""
-		} else {
-			payload += string(b[0])
+
+		line = strings.TrimSpace(line)
+		if len(line) > 0 {
+			shipper.LogShip(line)
 		}
 	}
-
-	return nil
 }

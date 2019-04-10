@@ -13,6 +13,6 @@ var _ = Describe("LogShipper", func() {
 		shipper := nozzle.NewSampleShipper(&writer)
 		err := shipper.LogShip("YOLO")
 		Expect(err).To(BeNil())
-		Expect(string(writer.Bytes())).To(Equal("YOLO"))
+		Expect(string(writer.Bytes())).To(Equal("YOLO\n"))
 	})
 })

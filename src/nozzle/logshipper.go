@@ -18,5 +18,10 @@ func NewSampleShipper(writer io.Writer) LogShipper {
 
 func (ss *SampleShipper) LogShip(log string) error {
 	_, err := ss.writer.Write([]byte(log))
+	if err != nil {
+		return err
+	}
+
+	_, err = ss.writer.Write([]byte("\n"))
 	return err
 }

@@ -95,7 +95,8 @@ func main() {
 		panic(err)
 	}
 
-	nozzle.GatewayMain(c, uaaClient)
+	ss := nozzle.NewSampleShipper(os.Stdout)
+	nozzle.Receive(c, uaaClient, ss)
 }
 
 func rlpMain() {
