@@ -1,8 +1,8 @@
 vendor
 
-src/local_dev.sh
-src/certs
-!src/certs/.gitkeep
+rlp/local_dev.sh
+rlp/certs
+!rlp/certs/.gitkeep
 
 gateway/local_dev.sh
 main

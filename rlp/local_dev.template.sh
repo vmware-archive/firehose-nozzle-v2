@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-
 set -e
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+pushd ${dir}
 
 export local_port=9000
 export remote_port=8086
@@ -11,7 +13,7 @@ export CA_CERT_PATH=./certs/root_ca_certificate
 export CERT_PATH=./certs/my.crt
 export KEY_PATH=./certs/my.key
 
-export LOGS_API_ADDR=localhost:$local_port
+export LOGS_API_ADDR=localhost:${local_port}
 
 trap cleanup INT
 function cleanup() {
@@ -23,7 +25,6 @@ function cleanup() {
 echo "Starting tunnel"
 echo ""
 
-echo "Starting tunnel"
 ssh -N -f \
     -i $HOME/pcf.example.opsman_rsa \
     -L ${bind_host_host_port} \

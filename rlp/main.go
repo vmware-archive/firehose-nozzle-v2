@@ -20,7 +20,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
-	"github.com/cf-platform-eng/firehose-nozzle-v2/src/nozzle"
 	"io/ioutil"
 	"log"
 	"os"
@@ -85,18 +84,12 @@ func newTLSConfig(caPath, certPath, keyPath, cn string) (*tls.Config, error) {
 }
 
 func main() {
-	c, err := nozzle.GetConfig()
-	if err != nil {
-		panic(err)
-	}
+	//c, err := nozzle.GetConfig()
+	//if err != nil {
+	//	panic(err)
+	//}
 
-	uaaClient, err := nozzle.NewUAA(c.UAAURL, c.UAAUser, c.UAAPass, true)
-	if err != nil {
-		panic(err)
-	}
-
-	ss := nozzle.NewSampleShipper(os.Stdout)
-	nozzle.Receive(c, uaaClient, ss)
+	rlpMain()
 }
 
 func rlpMain() {
