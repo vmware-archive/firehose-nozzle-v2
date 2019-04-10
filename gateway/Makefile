@@ -28,9 +28,8 @@ boostrap: bootstrap
 .PHONY: bootstrap
 bootstrap:
 ifndef HAS_DEP
-	go get -u github.com/golang/dep/cmd/dep
 	go get -u github.com/maxbrunsfeld/counterfeiter
 endif
-	dep ensure -v
+	go mod vendor
 
 all: fmt test
