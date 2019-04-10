@@ -4,4 +4,5 @@ src/local_dev.sh
 src/certs
 !src/certs/.gitkeep
 
+gateway/local_dev.sh
 main
