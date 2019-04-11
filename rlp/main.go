@@ -26,5 +26,8 @@ func main() {
 	}
 
 	tls := nozzle.NewTLSConfig(c)
-	nozzle.Receive(c, tls)
+	err = nozzle.Receive(c, tls)
+	if err != nil {
+		panic(err)
+	}
 }
