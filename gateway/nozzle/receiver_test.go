@@ -3,8 +3,8 @@ package nozzle_test
 import (
 	"bytes"
 	"errors"
-	"rlp/nozzle"
-	"rlp/nozzle/nozzlefakes"
+	"gateway/nozzle"
+	"gateway/nozzle/nozzlefakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"net/http"

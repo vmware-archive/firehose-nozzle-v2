@@ -1,7 +1,7 @@
 package nozzle_test
 
 import (
-	"rlp/nozzle"
+	"gateway/nozzle"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"os"

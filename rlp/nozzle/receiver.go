@@ -49,7 +49,7 @@ type tlsConfigProvider struct {
 	config *Config
 }
 
-func (t *tlsConfigProvider)GetTLSConfig() (*tls.Config, error) {
+func (t *tlsConfigProvider) GetTLSConfig() (*tls.Config, error) {
 	cert, err := tls.LoadX509KeyPair(t.config.CertPath, t.config.KeyPath)
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (t *tlsConfigProvider)GetTLSConfig() (*tls.Config, error) {
 	return tlsConfig, nil
 }
 
-func NewTLSConfig(c *Config) TLSConfigProvider{
+func NewTLSConfig(c *Config) TLSConfigProvider {
 	return &tlsConfigProvider{config: c}
 }
 

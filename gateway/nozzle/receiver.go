@@ -41,7 +41,10 @@ func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 
 		line = strings.TrimSpace(line)
 		if len(line) > 0 {
-			shipper.LogShip(line)
+			err = shipper.LogShip(line)
+			if err != nil {
+				return err
+			}
 		}
 	}
 }

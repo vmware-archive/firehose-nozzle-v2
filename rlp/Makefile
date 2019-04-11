@@ -19,18 +19,16 @@ generate:
 
 cleandep:
 	rm -rf vendor
-	rm -f Gopkg.lock
+	rm -f go.sum
 
-HAS_DEP := $(shell command -v dep;)
+HAS_CFER := $(shell command -v counterfeiter;)
 
 boostrap: bootstrap
-
 .PHONY: bootstrap
 bootstrap:
-ifndef HAS_DEP
-	go get -u github.com/golang/dep/cmd/dep
+ifndef HAS_CFER
 	go get -u github.com/maxbrunsfeld/counterfeiter
 endif
-	dep ensure -v
+	go mod vendor
 
-all: fmt test build
+all: fmt test

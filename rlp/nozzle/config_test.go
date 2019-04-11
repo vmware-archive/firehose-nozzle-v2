@@ -1,10 +1,10 @@
 package nozzle_test
 
 import (
-	"rlp/nozzle"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"os"
+	"rlp/nozzle"
 )
 
 var _ = Describe("Config", func() {
