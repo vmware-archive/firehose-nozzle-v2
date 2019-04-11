@@ -1,9 +1,13 @@
 package nozzle
 
-import "io"
+import (
+	"code.cloudfoundry.org/go-loggregator/rpc/loggregator_v2"
+	"encoding/json"
+	"io"
+)
 
 type LogShipper interface {
-	LogShip(string) error
+	LogShip(log *loggregator_v2.Envelope) error
 }
 
 type SampleShipper struct {
@@ -16,8 +20,9 @@ func NewSampleShipper(writer io.Writer) LogShipper {
 	}
 }
 
-func (ss *SampleShipper) LogShip(log string) error {
-	_, err := ss.writer.Write([]byte(log))
+func (ss *SampleShipper) LogShip(log *loggregator_v2.Envelope) error {
+	logBytes, _ := json.Marshal(log)
+	_, err := ss.writer.Write(logBytes)
 	if err != nil {
 		return err
 	}

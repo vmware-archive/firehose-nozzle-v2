@@ -1,5 +1,3 @@
-github.com/cf-platform-eng/firehose-nozzle-v2 v0.0.0-20190410145018-0ea5e8433052 h1:ROck0e2+npIRvYwnY39KplBD2pcxoAiFdkud49gfipk=
-github.com/cf-platform-eng/firehose-nozzle-v2 v0.0.0-20190410145018-0ea5e8433052/go.mod h1:kfNrt66sPnaVhzSHoyKya5f85KLxUy2dfS8GHO0XA/Y=
 github.com/cloudfoundry-incubator/uaago v0.0.0-20190307164349-8136b7bbe76e h1:DFYA2+zpeaTPEOizAJuaee2O7YX3UP5tOMjkeXL8iLo=
 github.com/cloudfoundry-incubator/uaago v0.0.0-20190307164349-8136b7bbe76e/go.mod h1:8wJCVaTSjT8phXCkbZWAKIB9JU8BEVHbnSbLgkr8WfY=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=

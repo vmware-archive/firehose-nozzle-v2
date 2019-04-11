@@ -9,7 +9,7 @@ There are two ways to connect get data from the v2 API.
 
 Each is described below. Using the Gateway is the easier path to building a nozzle.
 
-## Building a Nozzle Using RLP Gateway
+## Building a Nozzle Using RLP Gateway (Recommended Path)
 
 The RLP Gateway adds:
 * The ability to deploy applications as a nozzle

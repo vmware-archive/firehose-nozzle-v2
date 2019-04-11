@@ -3,8 +3,8 @@ package nozzle_test
 import (
 	"bytes"
 	"errors"
-	"github.com/cf-platform-eng/firehose-nozzle-v2/src/nozzle"
-	"github.com/cf-platform-eng/firehose-nozzle-v2/src/nozzle/nozzlefakes"
+	"rlp/nozzle"
+	"rlp/nozzle/nozzlefakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"net/http"

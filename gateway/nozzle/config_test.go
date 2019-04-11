@@ -1,7 +1,7 @@
 package nozzle_test
 
 import (
-	"github.com/cf-platform-eng/firehose-nozzle-v2/src/nozzle"
+	"rlp/nozzle"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"os"

@@ -5,10 +5,11 @@ import (
 )
 
 type Config struct {
-	UAAURL       string `envconfig:"UAA_URL" required:"true"`
-	UAAUser      string `envconfig:"UAA_USER" required:"true"`
-	UAAPass      string `envconfig:"UAA_PASS" required:"true"`
-	LogStreamUrl string `envconfig:"LOG_STREAM_URL" required:"true"`
+	CACertPath       string `envconfig:"CA_CERT_PATH" required:"true"`
+	CertPath      string `envconfig:"CERT_PATH" required:"true"`
+	KeyPath      string `envconfig:"KEY_PATH" required:"true"`
+	LogsAPIAddr string `envconfig:"LOGS_API_ADDR" required:"true"`
+	ShardID string `envconfig:"SHARD_ID" required:"true"`
 }
 
 func GetConfig() (*Config, error) {
