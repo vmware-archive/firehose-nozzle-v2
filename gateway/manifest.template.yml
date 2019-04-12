@@ -1,0 +1,14 @@
+---
+applications:
+- name: v2-nozzle
+  memory: 128M
+  instances: 2
+  buildpack: go_buildpack
+  health-check-type: process
+  env:
+    GOPACKAGENAME: gateway
+    UAA_URL: https://uaa.sys.example.com
+    UAA_USER: "v2-nozzle-test"
+    UAA_PASS: password
+    LOG_STREAM_URL: https://log-stream.sys.example.com
+    SKIP_SSL_VALIDATION: true

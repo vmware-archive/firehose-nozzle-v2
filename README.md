@@ -98,6 +98,11 @@ ssh -i [path to ssh private key] \
 `src/local_dev.template.sh` is a sample script that will run the nozzle, once 
 the certificates are generated and put on disk.
 
+## Tile
+The `tile` directory packages the gateway version of the nozzle as an app deployed on the platform.
+
+Build is done via [PCF Tile Generator](https://github.com/cf-platform-eng/tile-generator/)
+
 ## References
 
 * v1 -> v2 mapping: https://github.com/cloudfoundry/loggregator-api/blob/master/README.md#v2---v1-mapping

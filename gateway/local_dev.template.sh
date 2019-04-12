@@ -14,4 +14,3 @@ echo "Starting nozzle"
 echo ""
 
 go run main.go
-

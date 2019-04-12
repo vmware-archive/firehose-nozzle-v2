@@ -5,4 +5,9 @@ rlp/certs
 !rlp/certs/.gitkeep
 
 gateway/local_dev.sh
-main
+gateway/main
+gateway/manifest.yml
+
+tile/product/
+tile/release/
+tile/resources/nozzle.zip
