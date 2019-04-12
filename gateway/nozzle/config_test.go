@@ -34,11 +34,43 @@ var _ = Describe("Config", func() {
 		os.Setenv("UAA_USER", "my_user")
 		os.Setenv("UAA_PASS", "my_pass")
 		os.Setenv("LOG_STREAM_URL", "log-stream.sys.cf.example.com")
+		os.Setenv("ENVELOPES", "log")
+
 		c, err := nozzle.GetConfig()
+
 		Expect(err).To(BeNil())
 		Expect(c.UAAURL).To(Equal("my_url"))
 		Expect(c.UAAUser).To(Equal("my_user"))
 		Expect(c.LogStreamUrl).To(Equal("log-stream.sys.cf.example.com"))
 		Expect(c.UAAPass).To(Equal("my_pass"))
+		Expect(c.Envelopes).To(Equal([]string{"log"}))
+	})
+
+	Context("envelopes", func() {
+		BeforeEach(func() {
+			os.Setenv("UAA_URL", "my_url")
+			os.Setenv("UAA_USER", "my_user")
+			os.Setenv("UAA_PASS", "my_pass")
+			os.Setenv("LOG_STREAM_URL", "log-stream.sys.cf.example.com")
+			os.Setenv("ENVELOPES", "log")
+		})
+
+		It("rejects invalid envelope types", func() {
+			os.Setenv("ENVELOPES", "logg")
+
+			_, err := nozzle.GetConfig()
+
+			Expect(err).NotTo(BeNil())
+			Expect(err.Error()).To(ContainSubstring("'logg' is not"))
+		})
+
+		It("multiple envelopes", func() {
+			os.Setenv("ENVELOPES", "log,event")
+
+			c, err := nozzle.GetConfig()
+
+			Expect(err).To(BeNil())
+			Expect(c.Envelopes).To(Equal([]string{"log", "event"}))
+		})
 	})
 })

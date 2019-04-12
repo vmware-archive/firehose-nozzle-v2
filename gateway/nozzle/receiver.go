@@ -29,7 +29,7 @@ func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 		return err
 	}
 
-	gatewayURI := c.LogStreamUrl + "/v2/read?counter"
+	gatewayURI := c.LogStreamUrl + "/v2/read?" + strings.Join(c.Envelopes, "&")
 	transport := http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: c.SkipSSLValidation}}
 	client := http.Client{Transport: &transport}
 	gatewayURL, err := url.Parse(gatewayURI)

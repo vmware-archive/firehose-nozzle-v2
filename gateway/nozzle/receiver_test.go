@@ -67,6 +67,26 @@ var _ = Describe("Receiver", func() {
 		Expect(streamerRequest.Header.Get("Authorization")).To(Equal("MyCrazyAuth"))
 	})
 
+	It("Receiver requests multiple envelope types", func() {
+		var streamerRequest *http.Request
+		handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			streamerRequest = r
+		})
+		logStreamServer := httptest.NewServer(handler)
+		c := nozzle.Config{
+			LogStreamUrl: logStreamServer.URL,
+			Envelopes:    []string{"counter", "log", "gauge"},
+		}
+		uaaClient := &nozzlefakes.FakeUAA{}
+		uaaClient.GetAuthTokenReturns("MyCrazyAuth", nil)
+		writer := bytes.Buffer{}
+		shipper := nozzle.NewSampleShipper(&writer)
+
+		nozzle.Receive(&c, uaaClient, shipper)
+
+		Expect(streamerRequest.RequestURI).To(Equal("/v2/read?counter&log&gauge"))
+	})
+
 	It("Receiver surfaces error from UAA GetAuthToken", func() {
 		uaaClient := &nozzlefakes.FakeUAA{}
 		uaaClient.GetAuthTokenReturns("", errors.New("bad authorization"))

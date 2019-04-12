@@ -10,5 +10,6 @@ applications:
     UAA_URL: https://uaa.sys.example.com
     UAA_USER: "v2-nozzle-test"
     UAA_PASS: password
+    ENVELOPES: "log,counter,gauge,timer,event"
     LOG_STREAM_URL: https://log-stream.sys.example.com
     SKIP_SSL_VALIDATION: true

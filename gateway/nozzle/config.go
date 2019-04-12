@@ -16,19 +16,42 @@
 package nozzle
 
 import (
+	"errors"
+	"fmt"
 	"github.com/kelseyhightower/envconfig"
 )
 
 type Config struct {
-	UAAURL            string `envconfig:"UAA_URL" required:"true"`
-	UAAUser           string `envconfig:"UAA_USER" required:"true"`
-	UAAPass           string `envconfig:"UAA_PASS" required:"true"`
-	SkipSSLValidation bool   `envconfig:"SKIP_SSL_VALIDATION"`
-	LogStreamUrl      string `envconfig:"LOG_STREAM_URL" required:"true"`
+	UAAURL            string   `envconfig:"UAA_URL" required:"true"`
+	UAAUser           string   `envconfig:"UAA_USER" required:"true"`
+	UAAPass           string   `envconfig:"UAA_PASS" required:"true"`
+	SkipSSLValidation bool     `envconfig:"SKIP_SSL_VALIDATION"`
+	LogStreamUrl      string   `envconfig:"LOG_STREAM_URL" required:"true"`
+	Envelopes         []string `envconfig:"envelopes" required:"true"`
 }
 
 func GetConfig() (*Config, error) {
 	c := &Config{}
 	err := envconfig.Process("", c)
-	return c, err
+	if err != nil {
+		return nil, err
+	}
+	err = c.validEnvelopes()
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
+}
+
+func (c *Config) validEnvelopes() error {
+	for _, e := range c.Envelopes {
+		if e != "log" && e != "counter" && e != "gauge" && e != "timer" && e != "event" {
+			return errors.New(fmt.Sprintf(
+				"'%s' is not a valid envelope type. Allowed values are: log, counter, gauge, timer, event", e,
+			))
+		}
+	}
+
+	return nil
 }

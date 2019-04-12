@@ -5,8 +5,10 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 pushd ${dir}
 
 pushd ../gateway
-zip -r nozzle.zip *
+make boostrap
+
+rm -f ../tile/resources/nozzle.zip
+zip -r ../tile/resources/nozzle.zip *
 popd
 
-mv ../gateway/nozzle.zip resources
 tile build

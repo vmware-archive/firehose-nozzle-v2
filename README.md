@@ -45,7 +45,7 @@ The RLP Gateway data can be tested with just `curl`. To view the
 data (newline delimited JSON payloads), copy the token and run:
 ```bash
 export token=<my-v2-nozzle token from context>
-curl -k -H "Authorization: $token" 'https://log-stream.sys.<pcf system domain>/v2/read?counter'
+curl -k -H "Authorization: $token" 'https://log-stream.sys.<pcf system domain>/v2/read?counter&gauge'
 ```
 
 ## Building a Nozzle Directly Connecting to RLP
