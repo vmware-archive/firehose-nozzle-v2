@@ -17,16 +17,27 @@ package nozzle
 
 import (
 	"bufio"
+	"context"
 	"crypto/tls"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
 )
 
-func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
+
+func Stream(ctx context.Context, c *Config, uaaClient UAA, shipper LogShipper) error {
+	for ctx.Err() == nil {
+		Receive(ctx, c, uaaClient, shipper)
+	}
+	return ctx.Err()
+}
+
+func Receive(ctx context.Context, c *Config, uaaClient UAA, shipper LogShipper) {
 	token, err := uaaClient.GetAuthToken()
 	if err != nil {
-		return err
+		fmt.Print(err)
+		return
 	}
 
 	gatewayURI := c.LogStreamUrl + "/v2/read?" + strings.Join(c.Envelopes, "&")
@@ -34,7 +45,8 @@ func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 	client := http.Client{Transport: &transport}
 	gatewayURL, err := url.Parse(gatewayURI)
 	if err != nil {
-		return err
+		fmt.Print(err)
+		return
 	}
 
 	response, err := client.Do(&http.Request{
@@ -44,21 +56,29 @@ func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 		URL: gatewayURL,
 	})
 	if err != nil {
-		return err
+		fmt.Print(err)
+		return
 	}
 
 	reader := bufio.NewReader(response.Body)
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil {
-			return err
+			fmt.Print(err)
+			return
 		}
 
 		line = strings.TrimSpace(line)
-		if len(line) > 0 {
-			err = shipper.LogShip(line)
-			if err != nil {
-				return err
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			if len(line) > 0 {
+				err = shipper.LogShip(line)
+				if err != nil {
+					fmt.Print(err)
+					return
+				}
 			}
 		}
 	}

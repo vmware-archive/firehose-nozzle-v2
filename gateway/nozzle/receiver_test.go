@@ -17,6 +17,7 @@ package nozzle_test
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"gateway/nozzle"
 	"gateway/nozzle/nozzlefakes"
@@ -40,8 +41,8 @@ var _ = Describe("Receiver", func() {
 		uaaClient := &nozzlefakes.FakeUAA{}
 		writer := bytes.Buffer{}
 		shipper := nozzle.NewSampleShipper(&writer)
-
-		err := nozzle.Receive(&c, uaaClient, shipper)
+		ctx := context.Background()
+		err := nozzle.Stream(ctx, &c, uaaClient, shipper)
 
 		Expect(err).NotTo(BeNil())
 		Expect(err.Error()).To(Equal("EOF"))
@@ -61,8 +62,9 @@ var _ = Describe("Receiver", func() {
 		uaaClient.GetAuthTokenReturns("MyCrazyAuth", nil)
 		writer := bytes.Buffer{}
 		shipper := nozzle.NewSampleShipper(&writer)
+		ctx := context.Background()
 
-		nozzle.Receive(&c, uaaClient, shipper)
+		nozzle.Stream(ctx, &c, uaaClient, shipper)
 
 		Expect(streamerRequest.Header.Get("Authorization")).To(Equal("MyCrazyAuth"))
 	})
@@ -82,7 +84,8 @@ var _ = Describe("Receiver", func() {
 		writer := bytes.Buffer{}
 		shipper := nozzle.NewSampleShipper(&writer)
 
-		nozzle.Receive(&c, uaaClient, shipper)
+		ctx := context.Background()
+		nozzle.Stream(ctx, &c, uaaClient, shipper)
 
 		Expect(streamerRequest.RequestURI).To(Equal("/v2/read?counter&log&gauge"))
 	})
@@ -93,7 +96,8 @@ var _ = Describe("Receiver", func() {
 		writer := bytes.Buffer{}
 		shipper := nozzle.NewSampleShipper(&writer)
 
-		err := nozzle.Receive(&nozzle.Config{}, uaaClient, shipper)
+		ctx := context.Background()
+		err := nozzle.Stream(ctx, &nozzle.Config{}, uaaClient, shipper)
 
 		Expect(err).NotTo(BeNil())
 		Expect(err.Error()).To(Equal("bad authorization"))

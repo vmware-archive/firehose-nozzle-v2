@@ -16,6 +16,7 @@
 package main
 
 import (
+	"context"
 	"gateway/nozzle"
 	"os"
 )
@@ -32,7 +33,8 @@ func main() {
 	}
 
 	ss := nozzle.NewSampleShipper(os.Stdout)
-	err = nozzle.Receive(c, uaaClient, ss)
+	ctx := context.Background()
+	err = nozzle.Stream(ctx, c, uaaClient, ss)
 	if err != nil {
 		panic(err)
 	}
