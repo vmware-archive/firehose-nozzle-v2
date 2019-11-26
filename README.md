@@ -18,6 +18,10 @@ The RLP Gateway adds:
 
 The gateway was released [in PCF version 2.4](https://docs.pivotal.io/pivotalcf/2-4/pcf-release-notes/runtime-rn.html#-loggregator-v2-api-is-readable-through-rlp-gateway)
 
+The code in this repo is for bootstraping, but the client here:
+https://github.com/cloudfoundry/go-loggregator/blob/master/rlp_gateway_client.go
+should be the basis for a production nozzle.
+
 ### Authentication & Testing
 To create a UAA user that can access the data, use
 the [UAA CLI](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
