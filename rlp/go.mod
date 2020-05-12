@@ -10,3 +10,5 @@ require (
 	github.com/onsi/gomega v1.5.0
 	google.golang.org/grpc v1.20.0 // indirect
 )
+
+go 1.13

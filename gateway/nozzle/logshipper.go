@@ -15,7 +15,9 @@
 
 package nozzle
 
-import "io"
+import (
+	"io"
+)
 
 type LogShipper interface {
 	LogShip(string) error

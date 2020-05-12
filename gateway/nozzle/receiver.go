@@ -18,6 +18,7 @@ package nozzle
 import (
 	"bufio"
 	"crypto/tls"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -26,7 +27,7 @@ import (
 func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 	token, err := uaaClient.GetAuthToken()
 	if err != nil {
-		return err
+		return fmt.Errorf("error getting auth token: %w", err)
 	}
 
 	gatewayURI := c.LogStreamUrl + "/v2/read?" + strings.Join(c.Envelopes, "&")
@@ -34,7 +35,7 @@ func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 	client := http.Client{Transport: &transport}
 	gatewayURL, err := url.Parse(gatewayURI)
 	if err != nil {
-		return err
+		return fmt.Errorf("error parsing gatewayURI: %w", err)
 	}
 
 	response, err := client.Do(&http.Request{
@@ -51,14 +52,14 @@ func Receive(c *Config, uaaClient UAA, shipper LogShipper) error {
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil {
-			return err
+			return fmt.Errorf("error reading body: %w", err)
 		}
 
 		line = strings.TrimSpace(line)
 		if len(line) > 0 {
 			err = shipper.LogShip(line)
 			if err != nil {
-				return err
+				return fmt.Errorf("error shipping: %w", err)
 			}
 		}
 	}
