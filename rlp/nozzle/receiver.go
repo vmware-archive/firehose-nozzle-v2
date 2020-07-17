@@ -71,7 +71,7 @@ func (t *tlsConfigProvider) GetTLSConfig() (*tls.Config, error) {
 	}
 
 	tlsConfig := &tls.Config{
-		ServerName:   "reverselogproxy",
+		ServerName:   t.config.CommonName,
 		Certificates: []tls.Certificate{cert},
 	}
 
