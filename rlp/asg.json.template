@@ -1,0 +1,9 @@
+[
+  {
+    "protocol": "tcp",
+    "destination": "PAS_SUBNET/24",
+    "ports": "8082",
+    "log": true,
+    "description": "access RLP on Doppler VMs"
+  }
+]

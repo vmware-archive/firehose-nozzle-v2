@@ -26,6 +26,7 @@ type Config struct {
 	CommonName  string `envconfig:"COMMON_NAME"`
 	LogsAPIAddr string `envconfig:"LOGS_API_ADDR" required:"true"`
 	ShardID     string `envconfig:"SHARD_ID" required:"true"`
+	PrintStats  bool   `envconfig:"PRINT_STATS"`
 }
 
 func GetConfig() (*Config, error) {
