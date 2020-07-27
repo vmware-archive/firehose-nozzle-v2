@@ -16,15 +16,21 @@
 package nozzle
 
 import (
+	"errors"
 	"github.com/kelseyhightower/envconfig"
 )
 
 type Config struct {
-	CACertPath  string `envconfig:"CA_CERT_PATH" required:"true"`
-	CertPath    string `envconfig:"CERT_PATH" required:"true"`
-	KeyPath     string `envconfig:"KEY_PATH" required:"true"`
-	CommonName  string `envconfig:"COMMON_NAME"`
-	LogsAPIAddr string `envconfig:"LOGS_API_ADDR" required:"true"`
+	CACertPath string `envconfig:"CA_CERT_PATH"`
+	CertPath   string `envconfig:"CERT_PATH"`
+	KeyPath    string `envconfig:"KEY_PATH"`
+	CommonName string `envconfig:"COMMON_NAME"`
+
+	CACert string `envconfig:"CA_CERT"`
+	Cert   string `envconfig:"CERT"`
+	Key    string `envconfig:"KEY"`
+
+	LogsAPIAddr string `envconfig:"LOGS_API_ADDR"`
 	ShardID     string `envconfig:"SHARD_ID" required:"true"`
 	PrintStats  bool   `envconfig:"PRINT_STATS"`
 }
@@ -34,5 +40,18 @@ func GetConfig() (*Config, error) {
 		CommonName: "reverselogproxy",
 	}
 	err := envconfig.Process("", c)
+
+	if c.CACert == "" && c.CACertPath == "" {
+		return nil, errors.New("one of CA_CERT or CA_CERT_PATH is required")
+	}
+
+	if c.Cert == "" && c.CertPath == "" {
+		return nil, errors.New("one of CERT or CERT_PATH is required")
+	}
+
+	if c.Key == "" && c.KeyPath == "" {
+		return nil, errors.New("one of KEY or KEY_PATH is required")
+	}
+
 	return c, err
 }

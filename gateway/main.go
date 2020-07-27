@@ -31,8 +31,9 @@ func main() {
 		panic(err)
 	}
 
-	ss := nozzle.NewSampleShipper(os.Stdout)
-	err = nozzle.Receive(c, uaaClient, ss)
+	//shipper := nozzle.NewSampleShipper(os.Stdout)
+	shipper := nozzle.NewParsingShipper(os.Stdout)
+	err = nozzle.Receive(c, uaaClient, shipper)
 	if err != nil {
 		panic(err)
 	}
