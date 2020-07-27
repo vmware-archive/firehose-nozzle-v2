@@ -1,0 +1,13 @@
+---
+applications:
+- name: firehose-nozzle-v2
+  buildpacks:
+  - go_buildpack
+  env:
+    PRINT_STATS: true
+    SHARD_ID: firehose-nozzle-v2
+    CA_CERT_PATH: ./ca.pem
+    CERT_PATH: ./cert.pem
+    KEY_PATH: ./key.pem
+    COMMON_NAME: doppler
+    LOGS_API_ADDR: doppler.service.cf.internal:8082

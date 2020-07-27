@@ -16,6 +16,8 @@
 package main
 
 import (
+	"net/http"
+	"os"
 	"rlp/nozzle"
 )
 
@@ -23,6 +25,14 @@ func main() {
 	c, err := nozzle.GetConfig()
 	if err != nil {
 		panic(err)
+	}
+
+	port := os.Getenv("PORT")
+	if port != "" {
+		go func(){
+			err := http.ListenAndServe(":" + port, http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
+			if err != nil { panic(err) }
+		}()
 	}
 
 	tls := nozzle.NewTLSConfig(c)

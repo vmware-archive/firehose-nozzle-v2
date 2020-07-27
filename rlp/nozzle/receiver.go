@@ -22,9 +22,11 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 )
 
 var allSelectors = []*loggregator_v2.Selector{
@@ -71,7 +73,7 @@ func (t *tlsConfigProvider) GetTLSConfig() (*tls.Config, error) {
 	}
 
 	tlsConfig := &tls.Config{
-		ServerName:   "reverselogproxy",
+		ServerName:   t.config.CommonName,
 		Certificates: []tls.Certificate{cert},
 	}
 
@@ -113,11 +115,36 @@ func Receive(c *Config, tls TLSConfigProvider) error {
 		Selectors: allSelectors,
 	})
 
-	for {
-		batch := rx()
+        peakRate := 0
+        lastReport := time.Now().UnixNano() + 1e9
+        reportInterval := int64(1e9)
+        numReceived := 0
+        runningAvgRate := 0.0
+        runningAvgAlpha := 0.1
 
-		for _, e := range batch {
-			log.Printf("%+v\n", e)
+	if c.PrintStats {
+		for {
+			for _, _ = range rx() {
+				t := time.Now().UnixNano()
+				if lastReport + reportInterval < t {
+					lastReport = t
+					if numReceived > peakRate {
+						peakRate = numReceived
+					}
+					runningAvgRate += runningAvgAlpha * (float64(numReceived) - runningAvgRate)
+					fmt.Printf("%10d/s (peak %10d/s, avg %.0f)\n", numReceived, peakRate, runningAvgRate)
+					numReceived = 0
+				}
+				numReceived += 1
+			}
+		}
+	} else {
+		for {
+			batch := rx()
+
+			for _, e := range batch {
+				log.Printf("%+v\n", e)
+			}
 		}
 	}
 }
