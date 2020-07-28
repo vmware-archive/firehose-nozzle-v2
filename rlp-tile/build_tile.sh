@@ -7,8 +7,8 @@ pushd ${dir}
 pushd ../rlp
 make boostrap
 
-rm -f ../tile/resources/nozzle.zip
-zip -r ../tile/resources/nozzle.zip *
+rm -f ../rlp-tile/resources/nozzle.zip
+zip -r ../rlp-tile/resources/nozzle.zip *
 popd
 
 tile build

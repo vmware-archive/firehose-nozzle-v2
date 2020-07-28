@@ -35,7 +35,11 @@ packages:
     instances: (( .properties.app_instances.value ))
     health-check-type: process
     env:
+      PRINT_STATS: true
       GOPACKAGENAME: rlp
+      SHARD_ID: firehose-nozzle-v2
       CA_CERT: (( $ops_manager.ca_certificate ))
-      CERT: (( .properties.ksm_api_credentials.cert_pem ))
-      KEY: (( .properties.ksm_api_credentials.private_key_pem ))
+      CERT: (( .properties.rlp_client_mtls.cert_pem ))
+      KEY: (( .properties.rlp_client_mtls.private_key_pem ))
+      COMMON_NAME: doppler
+      LOGS_API_ADDR: doppler.service.cf.internal:8082
