@@ -67,7 +67,13 @@ type tlsConfigProvider struct {
 }
 
 func (t *tlsConfigProvider) GetTLSConfig() (*tls.Config, error) {
-	cert, err := tls.LoadX509KeyPair(t.config.CertPath, t.config.KeyPath)
+	var err error
+	var cert tls.Certificate
+	if t.config.Cert != "" {
+		cert, err = tls.X509KeyPair([]byte(t.config.Cert), []byte(t.config.Key))
+	} else {
+		cert, err = tls.LoadX509KeyPair(t.config.CertPath, t.config.KeyPath)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +83,12 @@ func (t *tlsConfigProvider) GetTLSConfig() (*tls.Config, error) {
 		Certificates: []tls.Certificate{cert},
 	}
 
-	caCertBytes, err := ioutil.ReadFile(t.config.CACertPath)
+	var caCertBytes []byte
+	if t.config.CACert != "" {
+		caCertBytes = []byte(t.config.CACert)
+	} else {
+		caCertBytes, err = ioutil.ReadFile(t.config.CACertPath)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -115,18 +126,18 @@ func Receive(c *Config, tls TLSConfigProvider) error {
 		Selectors: allSelectors,
 	})
 
-        peakRate := 0
-        lastReport := time.Now().UnixNano() + 1e9
-        reportInterval := int64(1e9)
-        numReceived := 0
-        runningAvgRate := 0.0
-        runningAvgAlpha := 0.1
+	peakRate := 0
+	lastReport := time.Now().UnixNano() + 1e9
+	reportInterval := int64(1e9)
+	numReceived := 0
+	runningAvgRate := 0.0
+	runningAvgAlpha := 0.1
 
 	if c.PrintStats {
 		for {
 			for _, _ = range rx() {
 				t := time.Now().UnixNano()
-				if lastReport + reportInterval < t {
+				if lastReport+reportInterval < t {
 					lastReport = t
 					if numReceived > peakRate {
 						peakRate = numReceived

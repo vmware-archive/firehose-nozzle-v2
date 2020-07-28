@@ -1,0 +1,41 @@
+---
+name: nozzle-example
+icon_file: resources/icon.png
+label: Firehose v2 Gateway Nozzle Example
+description: Firehose v2 Gateway Nozzle Example
+
+forms:
+- name: config_form
+  label: Nozzle Config
+  description: Nozzle configuration values
+  properties:
+  - name: uaa_user
+    type: string
+    label: UAA Client Name
+  - name: uaa_pass
+    type: secret
+    label: UAA Client Secret
+  - name: app_instances
+    type: integer
+    label: Number of nozzle instances to run
+    default: 2
+  - name: envelopes
+    type: string
+    label: "A comma separated list of envelope types (don't include spaces). Valid choices include: log, counter, gauge, timer, event"
+    default: "counter,gauge"
+
+packages:
+- name: nozzle-app
+  type: app
+  manifest:
+    path: resources/nozzle.zip
+    buildpack: go_buildpack
+    instances: (( .properties.app_instances.value ))
+    health-check-type: process
+    env:
+      GOPACKAGENAME: gateway
+      UAA_URL: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
+      UAA_USER: (( .properties.uaa_user.value ))
+      UAA_PASS: (( .properties.uaa_pass.value ))
+      LOG_STREAM_URL: https://log-stream.(( ..cf.cloud_controller.system_domain.value ))
+      SKIP_SSL_VALIDATION: true

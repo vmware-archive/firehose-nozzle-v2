@@ -8,6 +8,14 @@ gateway/local_dev.sh
 gateway/main
 gateway/manifest.yml
 
-tile/product/
-tile/release/
-tile/resources/nozzle.zip
+rlp/local_dev.sh
+rlp/main
+rlp/manifest.yml
+
+gateway-tile/product/
+gateway-tile/release/
+gateway-tile/resources/nozzle.zip
+
+rlp-tile/product/
+rlp-tile/release/
+rlp-tile/resources/nozzle.zip

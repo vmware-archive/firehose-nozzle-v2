@@ -1,20 +1,22 @@
 ---
 name: nozzle-example
 icon_file: resources/icon.png
-label: Firehose v2 Nozzle Example
-description: Firehose v2 Nozzle Example
+label: Firehose v2 RLP Nozzle Example
+description: Firehose v2 RLP Nozzle Example
+
+apply_open_security_group: true
+
+properties:
+- name: rlp_client_mtls
+  type: rsa_cert_credentials
+  default:
+    domains: [rlp_nozzle]
 
 forms:
 - name: config_form
   label: Nozzle Config
   description: Nozzle configuration values
   properties:
-  - name: uaa_user
-    type: string
-    label: UAA Client Name
-  - name: uaa_pass
-    type: secret
-    label: UAA Client Secret
   - name: app_instances
     type: integer
     label: Number of nozzle instances to run
@@ -25,7 +27,7 @@ forms:
     default: "counter,gauge"
 
 packages:
-- name: my-application
+- name: nozzle-app
   type: app
   manifest:
     path: resources/nozzle.zip
@@ -33,9 +35,11 @@ packages:
     instances: (( .properties.app_instances.value ))
     health-check-type: process
     env:
-      GOPACKAGENAME: gateway
-      UAA_URL: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
-      UAA_USER: (( .properties.uaa_user.value ))
-      UAA_PASS: (( .properties.uaa_pass.value ))
-      LOG_STREAM_URL: https://log-stream.(( ..cf.cloud_controller.system_domain.value ))
-      SKIP_SSL_VALIDATION: true
+      PRINT_STATS: true
+      GOPACKAGENAME: rlp
+      SHARD_ID: firehose-nozzle-v2
+      CA_CERT: (( $ops_manager.ca_certificate ))
+      CERT: (( .properties.rlp_client_mtls.cert_pem ))
+      KEY: (( .properties.rlp_client_mtls.private_key_pem ))
+      COMMON_NAME: doppler
+      LOGS_API_ADDR: doppler.service.cf.internal:8082
